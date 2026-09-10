@@ -22,6 +22,12 @@ Declarative macOS system configuration using [nix-darwin](https://github.com/nix
 
    See [lix.systems/install](https://lix.systems/install/) for details and other platforms.
 
+   The installer adds Nix to your shell startup files (e.g. `/etc/zshrc`), so a **new terminal session** will have it on `PATH` automatically. To use Nix in the *current* terminal without restarting it, source the daemon profile script manually:
+
+   ```sh
+   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+   ```
+
 3. **Homebrew** — required because this flake manages Homebrew formulae (`homebrew.enable = true`). nix-darwin does not install Homebrew itself, so it must be present beforehand:
 
    ```sh
@@ -34,7 +40,7 @@ Declarative macOS system configuration using [nix-darwin](https://github.com/nix
 
    ```sh
    sudo mkdir -p /etc/nix-darwin
-   sudo chown "$(whoami)" /etc/nix-darwin
+   sudo chown "$(id -nu):$(id -ng)" /etc/nix-darwin
    git clone git@github.com:Gulivertx/nix-darwin-config.git /etc/nix-darwin
    cd /etc/nix-darwin
    ```
