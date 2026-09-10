@@ -1,0 +1,6 @@
+# Symlink to the built system generation, regenerated on every rebuild
+result
+result-*
+
+# macOS
+.DS_Store
