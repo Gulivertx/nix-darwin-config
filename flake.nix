@@ -62,10 +62,10 @@
         onActivation = {
           autoUpdate = true;
           upgrade = true;
-          # "uninstall" = désinstalle automatiquement tout brew/cask non déclaré
-          # ci-dessus (Homebrew entièrement géré de façon déclarative).
-          # Les CLI migrés vers nix seront donc retirés de Homebrew tout seuls.
-          # ("zap" supprimerait en plus les fichiers de config associés.)
+          # "uninstall" = automatically uninstalls any brew/cask not declared
+          # above (Homebrew is fully managed declaratively).
+          # CLIs migrated to nix will therefore be removed from Homebrew on
+          # their own. ("zap" would additionally remove associated config files.)
           cleanup = "uninstall";
         };
       };

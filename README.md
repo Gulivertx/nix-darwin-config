@@ -1,11 +1,12 @@
 # nix-darwin configuration
 
-Configuration système déclarative pour macOS avec [nix-darwin](https://github.com/nix-darwin/nix-darwin), gérée via [Nix Flakes](https://nixos.wiki/wiki/Flakes). Couvre les paquets Nix, les polices, et les formules/casks Homebrew gérés de façon déclarative.
+Declarative macOS system configuration using [nix-darwin](https://github.com/nix-darwin/nix-darwin), managed via [Nix Flakes](https://nixos.wiki/wiki/Flakes). Covers Nix packages, fonts, and Homebrew formulae/casks, all managed declaratively.
 
-- Machine cible : `Cedrics-MacBook-Pro` (Apple Silicon, `aarch64-darwin`)
-- Utilisateur principal : `cedricbapst`
+- Target machine: `Cedrics-MacBook-Pro` (Apple Silicon, `aarch64-darwin`)
+- Primary user: `cedricbapst`
+- Nix distribution: [Lix](https://lix.systems/)
 
-## Prérequis
+## Prerequisites
 
 1. **Xcode Command Line Tools**
 
@@ -13,23 +14,23 @@ Configuration système déclarative pour macOS avec [nix-darwin](https://github.
    xcode-select --install
    ```
 
-2. **Nix** (avec les flakes activés). Le plus simple est l'installeur [Determinate Systems](https://github.com/DeterminateSystems/nix-installer) qui active les flakes par défaut :
+2. **Nix, via Lix** (flakes enabled by default). Lix is a friendly fork of Nix used here instead of upstream Nix/the Determinate Systems installer:
 
    ```sh
-   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+   curl -sSf -L https://install.lix.systems/lix | sh -s -- install
    ```
 
-   (Alternative : l'installeur officiel Nix, en activant ensuite `experimental-features = nix-command flakes` dans `/etc/nix/nix.conf`.)
+   See [lix.systems/install](https://lix.systems/install/) for details and other platforms.
 
-3. **Homebrew** — requis car ce flake gère des formules Homebrew (`homebrew.enable = true`). nix-darwin ne l'installe pas lui-même, il faut l'avoir en amont :
+3. **Homebrew** — required because this flake manages Homebrew formulae (`homebrew.enable = true`). nix-darwin does not install Homebrew itself, so it must be present beforehand:
 
    ```sh
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 
-## Installation sur un nouveau poste
+## Setting up on a new machine
 
-1. Cloner ce repo à l'emplacement standard attendu par nix-darwin :
+1. Clone this repo to the location nix-darwin expects:
 
    ```sh
    sudo mkdir -p /etc/nix-darwin
@@ -38,94 +39,94 @@ Configuration système déclarative pour macOS avec [nix-darwin](https://github.
    cd /etc/nix-darwin
    ```
 
-2. Vérifier que le nom de la config dans `flake.nix` correspond au hostname de la machine (`darwinConfigurations."Cedrics-MacBook-Pro"`). Sur une nouvelle machine avec un autre nom :
+2. Make sure the configuration name in `flake.nix` matches the machine's hostname (`darwinConfigurations."Cedrics-MacBook-Pro"`). On a new machine with a different name:
 
    ```sh
-   scutil --get LocalHostName   # ou: hostname
+   scutil --get LocalHostName   # or: hostname
    ```
 
-   Soit tu renommes ton Mac pour matcher (`sudo scutil --set HostName Cedrics-MacBook-Pro`), soit tu ajoutes/renomme une entrée `darwinConfigurations."<ton-hostname>"` dans `flake.nix`.
+   Either rename your Mac to match (`sudo scutil --set HostName Cedrics-MacBook-Pro`), or add/rename a `darwinConfigurations."<your-hostname>"` entry in `flake.nix`.
 
-3. Premier build et activation (aucun `darwin-rebuild` n'existe encore, on l'exécute via `nix run`) :
+3. First build and activation (no `darwin-rebuild` exists yet, so it's run via `nix run`):
 
    ```sh
    sudo nix run nix-darwin -- switch --flake /etc/nix-darwin#Cedrics-MacBook-Pro
    ```
 
-   Cette première exécution installe la commande `darwin-rebuild` dans le PATH pour les fois suivantes.
+   This first run installs the `darwin-rebuild` command into the `PATH` for subsequent use.
 
-## Utilisation quotidienne
+## Day-to-day usage
 
-Toutes les commandes sont à lancer depuis `/etc/nix-darwin` (ou en précisant `--flake /etc/nix-darwin`).
+Run all commands from `/etc/nix-darwin` (or pass `--flake /etc/nix-darwin`).
 
-### Mettre à jour les inputs du flake
+### Update flake inputs
 
-Met à jour `flake.lock` (nixpkgs, nix-darwin) vers les dernières révisions :
+Updates `flake.lock` (nixpkgs, nix-darwin) to the latest revisions:
 
 ```sh
 nix flake update
 ```
 
-Pour ne mettre à jour qu'un seul input :
+To update a single input only:
 
 ```sh
 nix flake update nixpkgs
 ```
 
-### Appliquer la configuration (switch)
+### Apply the configuration (switch)
 
-Après une modification de `flake.nix` (nouveaux paquets, etc.) ou après un `nix flake update` :
+After changing `flake.nix` (e.g. adding packages) or after `nix flake update`:
 
 ```sh
 sudo darwin-rebuild switch --flake .
 ```
 
-### Construire sans activer
+### Build without activating
 
-Utile pour vérifier que la config build correctement avant de l'appliquer :
+Useful to check the configuration builds before applying it:
 
 ```sh
 darwin-rebuild build --flake .
 ```
 
-### Revenir en arrière (rollback)
+### Roll back
 
 ```sh
 sudo darwin-rebuild --rollback
 ```
 
-Lister les générations disponibles :
+List available generations:
 
 ```sh
 darwin-rebuild --list-generations
 ```
 
-### Nettoyer le store (garbage collection)
+### Clean up the store (garbage collection)
 
-Supprime les anciennes générations et paquets Nix non référencés pour libérer de l'espace disque :
+Removes old generations and unreferenced Nix packages to free up disk space:
 
 ```sh
 sudo nix-collect-garbage -d
 ```
 
-Pour ne garder que les X derniers jours :
+To keep only the last N days:
 
 ```sh
 sudo nix-collect-garbage --delete-older-than 30d
 ```
 
-Optimiser le store (dédoublonnage par hardlinks) :
+Optimize the store (deduplicate via hardlinks):
 
 ```sh
 nix store optimise
 ```
 
-## Structure du repo
+## Repository structure
 
-- `flake.nix` — définition de la configuration système (paquets, polices, Homebrew, réglages nix-darwin).
-- `flake.lock` — verrouillage des versions des inputs (nixpkgs, nix-darwin). Généré/mis à jour par `nix flake update`.
+- `flake.nix` — system configuration definition (packages, fonts, Homebrew, nix-darwin settings).
+- `flake.lock` — pinned versions of the inputs (nixpkgs, nix-darwin). Generated/updated by `nix flake update`.
 
 ## Notes
 
-- `result` (symlink créé par `nix build`) est ignoré par git — il pointe vers le store Nix local et n'a pas à être versionné.
-- Le nettoyage Homebrew (`onActivation.cleanup = "uninstall"`) désinstalle automatiquement toute formule/cask non déclarée dans `flake.nix` lors d'un `switch`.
+- `result` (the symlink created by `nix build`) is gitignored — it points into the local Nix store and shouldn't be versioned.
+- Homebrew cleanup (`onActivation.cleanup = "uninstall"`) automatically uninstalls any brew/cask not declared in `flake.nix` on `switch`.
