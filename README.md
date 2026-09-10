@@ -2,8 +2,8 @@
 
 Declarative macOS system configuration using [nix-darwin](https://github.com/nix-darwin/nix-darwin), managed via [Nix Flakes](https://nixos.wiki/wiki/Flakes). Covers Nix packages, fonts, and Homebrew formulae/casks, all managed declaratively.
 
-- Target machine: `Cedrics-MacBook-Pro` (Apple Silicon, `aarch64-darwin`)
-- Primary user: `cedricbapst`
+- Target machine: Apple Silicon, `aarch64-darwin`
+- Primary user: edit `flake.nix` and specify your own username
 - Nix distribution: [Lix](https://lix.systems/)
 
 ## Prerequisites
@@ -39,18 +39,21 @@ Declarative macOS system configuration using [nix-darwin](https://github.com/nix
    cd /etc/nix-darwin
    ```
 
-2. Make sure the configuration name in `flake.nix` matches the machine's hostname (`darwinConfigurations."Cedrics-MacBook-Pro"`). On a new machine with a different name:
+2. Edit `flake.nix` for your machine:
 
-   ```sh
-   scutil --get LocalHostName   # or: hostname
-   ```
+   - Set `system.primaryUser` to your macOS username (`whoami`).
+   - Rename the `darwinConfigurations."<hostname>"` key to match your Mac's hostname:
 
-   Either rename your Mac to match (`sudo scutil --set HostName Cedrics-MacBook-Pro`), or add/rename a `darwinConfigurations."<your-hostname>"` entry in `flake.nix`.
+     ```sh
+     scutil --get LocalHostName   # or: hostname
+     ```
+
+     Either rename your Mac to match an existing entry (`sudo scutil --set HostName <hostname>`), or rename the `darwinConfigurations` entry in `flake.nix` to match your machine's hostname.
 
 3. First build and activation (no `darwin-rebuild` exists yet, so it's run via `nix run`):
 
    ```sh
-   sudo nix run nix-darwin -- switch --flake /etc/nix-darwin#Cedrics-MacBook-Pro
+   sudo nix run nix-darwin -- switch --flake "/etc/nix-darwin#$(scutil --get LocalHostName)"
    ```
 
    This first run installs the `darwin-rebuild` command into the `PATH` for subsequent use.
