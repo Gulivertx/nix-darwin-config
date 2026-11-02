@@ -90,7 +90,7 @@
   {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#Cedrics-MacBook-Pro
-    darwinConfigurations."Cedrics-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+    darwinConfigurations."Cedric-FZ-DEV" = nix-darwin.lib.darwinSystem {
       modules = [
         configuration
       ];
