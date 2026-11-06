@@ -24,7 +24,6 @@
         pkgs.tmux
         pkgs.cocoapods
         pkgs.sketchybar
-        pkgs.opencode
         pkgs.go
         pkgs.gh
         pkgs.jq
