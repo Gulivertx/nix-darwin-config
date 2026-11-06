@@ -39,6 +39,7 @@
         pkgs.unzip
         pkgs.nodejs_24
         pkgs.yarn
+        pkgs.shopify-cli
         pkgs.tree-sitter
         pkgs.gdtoolkit_4
         pkgs.imagemagick
