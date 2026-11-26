@@ -11,7 +11,7 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }:
   let
-    configuration = { pkgs, ... }: {
+    configuration = { pkgs, lib, ... }: {
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages = [
@@ -92,7 +92,8 @@
           # above (Homebrew is fully managed declaratively).
           # CLIs migrated to nix will therefore be removed from Homebrew on
           # their own. ("zap" would additionally remove associated config files.)
-          cleanup = "uninstall";
+          # mkDefault: a host can override it (see hosts/Cedric-FZ-DEV.nix).
+          cleanup = lib.mkDefault "uninstall";
         };
       };
 
