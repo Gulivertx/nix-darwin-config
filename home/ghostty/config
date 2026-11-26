@@ -1,0 +1,94 @@
+# This is the configuration file for Ghostty.
+#
+# This template file has been automatically created at the following
+# path since Ghostty couldn't find any existing config files on your system:
+#
+#   /Users/cedricbapst/Library/Application Support/com.mitchellh.ghostty/config
+#
+# The template does not set any default options, since Ghostty ships
+# with sensible defaults for all options. Users should only need to set
+# options that they want to change from the default.
+#
+# Run `ghostty +show-config --default --docs` to view a list of
+# all available config options and their default values.
+#
+# Additionally, each config option is also explained in detail
+# on Ghostty's website, at https://ghostty.org/docs/config.
+#
+# Ghostty can reload the configuration while running by using the menu
+# options or the bound key (default: Command + Shift + comma on macOS and
+# Control + Shift + comma on other platforms). Not all config options can be
+# reloaded while running; some only apply to new windows and others may require
+# a full restart to take effect.
+
+# Config syntax crash course
+# ==========================
+# # The config file consists of simple key-value pairs,
+# # separated by equals signs.
+# font-family = Iosevka
+# window-padding-x = 2
+#
+# # Spacing around the equals sign does not matter.
+# # All of these are identical:
+# key=value
+# key= value
+# key =value
+# key = value
+#
+# # Any line beginning with a # is a comment. It's not possible to put
+# # a comment after a config option, since it would be interpreted as a
+# # part of the value. For example, this will have a value of "#123abc":
+#
+# # Empty values are used to reset config keys to default.
+# key =
+#
+# # Some config options have unique syntaxes for their value,
+# # which is explained in the docs for that config option.
+# # Just for example:
+# resize-overlay-duration = 4s 200ms
+shell-integration-features = true
+
+# ─────────── added by SpookiUI ───────────
+background-blur = false
+
+# ─── Splits « à la Neovim » : Cmd+Ctrl ≈ <C-w> ───
+
+# Navigation  (nvim : <C-w>h/j/k/l)
+keybind = cmd+ctrl+h=goto_split:left
+keybind = cmd+ctrl+j=goto_split:down
+keybind = cmd+ctrl+k=goto_split:up
+keybind = cmd+ctrl+l=goto_split:right
+
+# Création  (nvim : <C-w>v = vertical à droite, <C-w>s = horizontal en dessous)
+keybind = cmd+ctrl+v=new_split:right
+keybind = cmd+ctrl+s=new_split:down
+
+# Fermer / zoom  (nvim : <C-w>c, et le zoom façon <leader>wm de LazyVim)
+keybind = cmd+ctrl+c=close_surface
+keybind = cmd+ctrl+z=toggle_split_zoom
+
+# Redimensionner  (Shift = « déplacer le bord » dans la direction hjkl)
+keybind = cmd+ctrl+shift+h=resize_split:left,20
+keybind = cmd+ctrl+shift+j=resize_split:down,20
+keybind = cmd+ctrl+shift+k=resize_split:up,20
+keybind = cmd+ctrl+shift+l=resize_split:right,20
+
+# Égaliser : Cmd+Ctrl+= est déjà le raccourci par défaut de Ghostty
+
+
+# ─── Palette Xcode Dark (comme nvim : vim-colors-xcode/xcodedark) ───
+# Couleurs ANSI, texte, curseur et sélection du thème intégré.
+# Les valeurs explicites ci-dessous (background) l'emportent sur le thème.
+theme = Xcode Dark
+
+# ─── Couleurs de fond (thème sombre macOS 27) ───
+# Fenêtre/split actif : textBackgroundColor macOS dark
+background = #1E1E1E
+# Fenêtre/split inactif : #282828 (underPageBackgroundColor), via shader
+custom-shader = shaders/focus-background.glsl
+# Pas besoin de boucle d'animation (le rendu se met à jour au changement de focus)
+custom-shader-animation = false
+
+# ─── Aucune opacité / transparence ───
+background-opacity = 1
+unfocused-split-opacity = 1

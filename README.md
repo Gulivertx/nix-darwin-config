@@ -56,6 +56,8 @@ Declarative macOS system configuration using [nix-darwin](https://github.com/nix
 
      Either rename your Mac to match an existing entry (`sudo scutil --set HostName <hostname>`), or rename the `darwinConfigurations` entry in `flake.nix` to match your machine's hostname.
 
+   - For a new host, add a `darwinConfigurations` entry and a matching `hosts/<hostname>.nix` module (copy an existing one), then `git add` it: flakes ignore untracked files.
+
 3. First build and activation (no `darwin-rebuild` exists yet, so it's run via `nix run`):
 
    ```sh
@@ -67,6 +69,14 @@ Declarative macOS system configuration using [nix-darwin](https://github.com/nix
 ## Day-to-day usage
 
 Run all commands from `/etc/nix-darwin` (or pass `--flake /etc/nix-darwin`).
+
+Once the configuration is active, three shortcuts are installed on every host and work from any directory:
+
+| Command | Runs |
+| --- | --- |
+| `nix-update [input...]` | `nix flake update --flake /etc/nix-darwin` |
+| `nix-upgrade` | `sudo darwin-rebuild switch --flake /etc/nix-darwin#<LocalHostName>` |
+| `nix-collect-garbage-all` | `sudo nix-collect-garbage -d` |
 
 ### Update flake inputs
 
@@ -132,10 +142,13 @@ nix store optimise
 
 ## Repository structure
 
-- `flake.nix` — system configuration definition (packages, fonts, Homebrew, nix-darwin settings).
-- `flake.lock` — pinned versions of the inputs (nixpkgs, nix-darwin). Generated/updated by `nix flake update`.
+- `flake.nix` — common system configuration shared by every host (packages, fonts, Homebrew, nix-darwin settings) and the list of hosts.
+- `flake.lock` — pinned versions of the inputs (nixpkgs, nix-darwin, home-manager). Generated/updated by `nix flake update`.
+- `hosts/<hostname>.nix` — packages, brews, casks and taps specific to one host, added on top of the common configuration.
+- `home/` — user dotfiles managed by home-manager, shared by every host: Ghostty config and shader, Claude Code status line and theme. They are symlinked straight into this repo, so edits made by the apps show up in `git diff`. `~/.claude/settings.json` stays per-machine: only its `statusLine` and `theme` keys are set on each `switch`.
 
 ## Notes
 
 - `result` (the symlink created by `nix build`) is gitignored — it points into the local Nix store and shouldn't be versioned.
+- On the first `switch` with home-manager, existing dotfiles it now manages are renamed `*.before-hm`.
 - Homebrew cleanup (`onActivation.cleanup = "uninstall"`) automatically uninstalls any brew/cask not declared in `flake.nix` on `switch`.
