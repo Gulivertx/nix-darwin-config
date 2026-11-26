@@ -1,12 +1,17 @@
 # Packages specific to Cedric-FZ-DEV (added on top of the common configuration).
 { pkgs, ... }: {
-  environment.systemPackages = [
-    pkgs.glab
-    pkgs.shopify-cli
+  # Grouped by category, alphabetical within each group.
+  environment.systemPackages = with pkgs; [
+    # Git
+    glab
+
     # PHP CLI tools: bundle their own nix PHP, independent of reeve's
     # Homebrew PHP versions (which reeve requires and keeps managing).
-    pkgs.phpstan
-    pkgs.phpPackages.php-cs-fixer
+    phpPackages.php-cs-fixer
+    phpstan
+
+    # Shopify
+    shopify-cli
   ];
 
   # Runs `brew shellenv` in zsh so /opt/homebrew/bin is on PATH

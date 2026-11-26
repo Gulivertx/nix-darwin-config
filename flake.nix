@@ -14,55 +14,74 @@
     configuration = { pkgs, lib, ... }: {
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
-      environment.systemPackages = [
-        pkgs.bat
-        pkgs.mdbtools
-        pkgs.codex
-        pkgs.vim
-        pkgs.neovim
-        pkgs.devenv
-        pkgs.fastfetch
-        pkgs.htop
-        pkgs.btop
-        pkgs.tmux
-        pkgs.cocoapods
-        pkgs.sketchybar
-        pkgs.go
-        pkgs.gh
-        pkgs.jq
-        pkgs.poppler
-        pkgs.poppler-utils
-        pkgs.tree
-        pkgs.ripgrep
-        pkgs.fd
-        pkgs.lazygit
-        pkgs.gcc
-        pkgs.gnumake
-        pkgs.curl
-        pkgs.unzip
-        pkgs.nodejs_24
-        pkgs.yarn
-        pkgs.tree-sitter
-        pkgs.gdtoolkit_4
-        pkgs.imagemagick
-        pkgs.gsl
-        pkgs.apple-sdk_15
-        pkgs.uv
-        pkgs.innoextract
+      # Grouped by category, alphabetical within each group.
+      environment.systemPackages = with pkgs; [
+        # CLI essentials
+        bat
+        curl
+        fd
+        jq
+        ripgrep
+        tree
+        unzip
+
+        # System monitoring
+        btop
+        fastfetch
+        htop
+
+        # Editors & terminal
+        neovim
+        tmux
+        tree-sitter
+        vim
+
+        # Git
+        gh
+        lazygit
+
+        # Build toolchain
+        apple-sdk_15
+        gcc
+        gnumake
+        gsl
+
+        # Languages & package managers
+        cocoapods
+        go
+        nodejs_24
+        uv
+        yarn
+
+        # Dev environments
+        devenv
+
+        # Files, documents & media
+        imagemagick
+        innoextract
+        mdbtools
+        poppler
+        poppler-utils
+
+        # Game dev (Godot)
+        gdtoolkit_4
+
+        # Desktop
+        sketchybar
 
         # Maintenance commands for this repo, the same on every host.
         # nix-update [input...]: update all flake inputs (or only those given).
-        (pkgs.writeShellScriptBin "nix-update" ''
+        (writeShellScriptBin "nix-update" ''
           exec nix flake update --flake /etc/nix-darwin "$@"
         '')
         # nix-upgrade [args...]: build and activate this Mac's configuration.
-        (pkgs.writeShellScriptBin "nix-upgrade" ''
+        (writeShellScriptBin "nix-upgrade" ''
           exec sudo /run/current-system/sw/bin/darwin-rebuild switch \
             --flake "/etc/nix-darwin#$(/usr/sbin/scutil --get LocalHostName)" "$@"
         '')
         # nix-collect-garbage-all: delete old generations of every profile
         # (system and user), then garbage-collect the store.
-        (pkgs.writeShellScriptBin "nix-collect-garbage-all" ''
+        (writeShellScriptBin "nix-collect-garbage-all" ''
           exec sudo "$(command -v nix-collect-garbage)" -d "$@"
         '')
       ];
