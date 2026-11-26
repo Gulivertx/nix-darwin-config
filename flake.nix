@@ -14,6 +14,7 @@
       # $ nix-env -qaP | grep wget
       environment.systemPackages = [
         pkgs.bat
+        pkgs.mdbtools
         pkgs.codex
         pkgs.vim
         pkgs.neovim
@@ -28,6 +29,7 @@
         pkgs.gh
         pkgs.jq
         pkgs.poppler
+        pkgs.poppler-utils
         pkgs.tree
         pkgs.ripgrep
         pkgs.fd
@@ -44,6 +46,8 @@
         pkgs.imagemagick
         pkgs.gsl
         pkgs.apple-sdk_15
+        pkgs.uv
+        pkgs.innoextract
       ];
 
       fonts.packages = [
@@ -58,6 +62,11 @@
           "firefoxpwa"
           "ruby"
           "vapor"
+        ];
+        casks = [
+          # Terminal web browser. No theme of its own: its UI derives
+          # its colors from the terminal (Ghostty, Xcode Dark palette).
+          "terminal-browser"
         ];
         onActivation = {
           autoUpdate = true;
@@ -89,7 +98,12 @@
   in
   {
     # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#Cedrics-MacBook-Pro
+    # $ darwin-rebuild build --flake .#<hostname>
+    darwinConfigurations."Cedrics-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      modules = [
+        configuration
+      ];
+    };
     darwinConfigurations."Cedric-FZ-DEV" = nix-darwin.lib.darwinSystem {
       modules = [
         configuration
