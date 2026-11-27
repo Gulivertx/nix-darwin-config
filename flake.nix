@@ -130,6 +130,18 @@
       };
       nix.settings.experimental-features = "nix-command flakes";
 
+      # Written to /etc/zshrc on every Mac (~/.zshrc stays unmanaged).
+      # y: open yazi, and on quit cd into the directory it was left in.
+      programs.zsh.interactiveShellInit = ''
+        function y() {
+          local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+          command yazi "$@" --cwd-file="$tmp"
+          IFS= read -r -d "" cwd < "$tmp"
+          [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+          rm -f -- "$tmp"
+        }
+      '';
+
       # Enable alternative shell support in nix-darwin.
       # programs.fish.enable = true;
 

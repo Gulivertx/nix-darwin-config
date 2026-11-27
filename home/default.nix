@@ -31,7 +31,15 @@ in
     "Library/Application Support/com.mitchellh.ghostty/config".source = link "ghostty/config";
     "Library/Application Support/com.mitchellh.ghostty/shaders/focus-background.glsl".source =
       link "ghostty/shaders/focus-background.glsl";
+
+    # Yazi: Xcode Dark theme, same palette as nvim
+    ".config/yazi/theme.toml".source = link "yazi/theme.toml";
   };
+
+  # Yazi file manager (the package comes from here, for every Mac).
+  # The `y` shell wrapper lives in /etc/zshrc (programs.zsh in flake.nix),
+  # since ~/.zshrc is not managed by home-manager.
+  programs.yazi.enable = true;
 
   home.activation.claudeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     settings="$HOME/.claude/settings.json"
