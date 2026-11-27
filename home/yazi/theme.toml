@@ -1,0 +1,148 @@
+# Yazi theme: Xcode Dark, same palette as nvim (vim-colors-xcode/xcodedark,
+# see ~/.config/nvim/lua/custom/xcode.lua), Ghostty and Claude Code.
+# Only overrides the preset (theme-dark.toml of yazi 26.9): the background is
+# left to the terminal, like nvim's transparent background.
+#
+# Palette
+#   bg       #292a30   bg_dark #2f3037   bg_mid #414453
+#   fg       #dfdfe0   comment #7f8c98   muted  #53606e
+#   blue     #4eb0cc   cyan    #6bdfff   teal   #78c2b3
+#   green    #84b360   purple  #b281eb   yellow #d9c97c
+#   pink     #ff7ab2   salmon  #ff8170   orange #ffa14f
+
+#:schema https://yazi-rs.github.io/schemas/theme.json
+
+[mgr]
+cwd = { fg = "#6bdfff" }
+
+# Find
+find_keyword  = { fg = "#d9c97c", bold = true, italic = true, underline = true }
+find_position = { fg = "#ff7ab2", bg = "reset", bold = true, italic = true }
+
+# Symlink
+symlink_target = { fg = "#78c2b3", italic = true }
+
+# Marker
+marker_copied   = { fg = "#84b360", bg = "#84b360" }
+marker_cut      = { fg = "#ff8170", bg = "#ff8170" }
+marker_marked   = { fg = "#6bdfff", bg = "#6bdfff" }
+marker_selected = { fg = "#d9c97c", bg = "#d9c97c" }
+
+# Count
+count_copied   = { fg = "#292a30", bg = "#84b360" }
+count_cut      = { fg = "#292a30", bg = "#ff8170" }
+count_selected = { fg = "#292a30", bg = "#d9c97c" }
+
+# Border
+border_style = { fg = "#53606e" }
+
+# Square ends instead of the preset's rounded Powerline caps (U+E0B6/U+E0B4):
+# the caps are drawn in the block's color, so a full block keeps the width.
+[tabs]
+sep_inner = { open = "█", close = "█" }
+sep_outer = { open = "█", close = "█" }
+active   = { fg = "#292a30", bg = "#4eb0cc", bold = true }
+inactive = { fg = "#4eb0cc", bg = "#414453" }
+
+[mode]
+normal_main = { fg = "#292a30", bg = "#4eb0cc", bold = true }
+normal_alt  = { fg = "#4eb0cc", bg = "#414453" }
+
+select_main = { fg = "#292a30", bg = "#b281eb", bold = true }
+select_alt  = { fg = "#b281eb", bg = "#414453" }
+
+unset_main = { fg = "#292a30", bg = "#ff8170", bold = true }
+unset_alt  = { fg = "#ff8170", bg = "#414453" }
+
+# Hovered file: selection color, like the cursor line / Visual in nvim.
+[indicator]
+padding = { open = "█", close = "█" }
+parent  = { bg = "#2f3037" }
+current = { fg = "#dfdfe0", bg = "#414453", bold = true }
+preview = { underline = true }
+
+[status]
+sep_left  = { open = "█", close = "█" }
+sep_right = { open = "█", close = "█" }
+
+# Permissions
+perm_sep   = { fg = "#53606e" }
+perm_type  = { fg = "#4eb0cc" }
+perm_read  = { fg = "#d9c97c" }
+perm_write = { fg = "#ff8170" }
+perm_exec  = { fg = "#84b360" }
+
+# Progress
+progress_label  = { fg = "#dfdfe0", bold = true }
+progress_normal = { fg = "#4eb0cc", bg = "#414453" }
+progress_error  = { fg = "#ff8170", bg = "#414453" }
+
+[which]
+border          = { fg = "#4eb0cc" }
+cand            = { fg = "#6bdfff" }
+rest            = { fg = "#7f8c98" }
+desc            = { fg = "#b281eb" }
+separator_style = { fg = "#53606e" }
+
+[confirm]
+border  = { fg = "#4eb0cc" }
+title   = { fg = "#b281eb", bold = true }
+btn_yes = { fg = "#292a30", bg = "#4eb0cc", bold = true }
+
+[spot]
+border   = { fg = "#4eb0cc" }
+title    = { fg = "#b281eb", bold = true }
+tbl_col  = { fg = "#4eb0cc" }
+tbl_cell = { fg = "#d9c97c", bg = "#414453" }
+
+[notify]
+title_info  = { fg = "#84b360" }
+title_warn  = { fg = "#d9c97c" }
+title_error = { fg = "#ff8170" }
+
+[pick]
+border   = { fg = "#4eb0cc" }
+active   = { fg = "#ff7ab2", bold = true }
+
+[input]
+border   = { fg = "#4eb0cc" }
+title    = { fg = "#b281eb" }
+selected = { bg = "#414453" }
+
+[cmp]
+border = { fg = "#4eb0cc" }
+active = { bg = "#414453", bold = true }
+
+[tasks]
+border  = { fg = "#4eb0cc" }
+title   = { fg = "#b281eb" }
+hovered = { fg = "#ff7ab2", bold = true }
+
+[help]
+border  = { fg = "#4eb0cc" }
+chord   = { fg = "#6bdfff" }
+hovered = { bg = "#414453", bold = true }
+
+# Replaces the preset's list entirely (same order, Xcode colors).
+[filetype]
+rules = [
+	# Image
+	{ mime = "**/image/*", fg = "#d9c97c" },
+	# Media
+	{ mime = "**/{audio,video}/*", fg = "#b281eb" },
+	# Archive
+	{ mime = "**/application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#ff8170" },
+	# Document
+	{ mime = "**/application/{pdf,doc,rtf}", fg = "#6bdfff" },
+	# Virtual file system
+	{ mime = "vfs/{absent,stale}", fg = "#7f8c98" },
+	# Special file
+	{ url = "*", is = "orphan", fg = "#292a30", bg = "#ff8170" },
+	{ url = "*", is = "exec"  , fg = "#84b360" },
+	# Dummy file
+	{ url = "*", is = "dummy", fg = "#292a30", bg = "#ff8170" },
+	{ url = "*/", is = "dummy", fg = "#292a30", bg = "#ff8170" },
+	# Fallback
+	{ url = "*/", fg = "#4eb0cc", bold = true },
+	{ url = "*", fg = "#dfdfe0" },
+]
